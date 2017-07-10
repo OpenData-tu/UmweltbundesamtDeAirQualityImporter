@@ -1,7 +1,6 @@
 package de.tu_berlin.open_data.airquality.UmweltbundesamtDeAirQualityImporter.service;
 
 import de.tu_berlin.open_data.airquality.UmweltbundesamtDeAirQualityImporter.model.Schema;
-import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
@@ -65,7 +64,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public URL generateUrl(String forPollutant, String startDate,  String endDate) throws MalformedURLException {
+    public URL generateUrl(String forPollutant, String scope, String startDate, String endDate) throws MalformedURLException {
         LocalTime time = LocalTime.of(22, 00, 00);
         LocalDate fromDate = LocalDate.parse(startDate, DateTimeFormatter.ISO_DATE).minusDays(1);
         LocalDate toDate = LocalDate.parse(endDate, DateTimeFormatter.ISO_DATE).minusDays(1);
@@ -73,7 +72,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         LocalDateTime fromDateTime = LocalDateTime.of(fromDate, time);
         LocalDateTime toDateTime = LocalDateTime.of(toDate, time);
 
-        URL url = new URL("https://www.umweltbundesamt.de/uaq/csv/stations/data?pollutant[]=" +forPollutant + "&scope[]=1TMW&group" +
+        URL url = new URL("https://www.umweltbundesamt.de/uaq/csv/stations/data?pollutant[]=" +forPollutant + "&scope[]=" +scope + "&group" +
                 "[]=station&range[]="+fromDateTime.toEpochSecond(ZoneOffset.UTC) + "," + toDateTime.toEpochSecond(ZoneOffset.UTC));
 
         return url;

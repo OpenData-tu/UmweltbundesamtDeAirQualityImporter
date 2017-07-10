@@ -481,6 +481,7 @@ public class LocationToCoordinates {
         locationDictionary.put("DENI157", new Location(52.427881,10.793056));
         locationDictionary.put("DEMV027", new Location(54.053041,13.777714));
         locationDictionary.put("DEST039", new Location(51.799423, 10.615218));
+        locationDictionary.put("DETH093", new Location(50.983262, 11.309514));
 
         locationNamesToCoordinates = Collections.unmodifiableMap(locationDictionary);
     }

@@ -16,5 +16,5 @@ public interface ApplicationService {
 
     LineMapper createLineMapper(Class<? extends Schema> aClass, Schema userModelInstance);
 
-    URL generateUrl(String forPollutant, String startDate, String endDate) throws MalformedURLException;
+    URL generateUrl(String forPollutant, String scope, String startDate, String endDate) throws MalformedURLException;
 }

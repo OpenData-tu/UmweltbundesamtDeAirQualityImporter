@@ -24,6 +24,7 @@ public class AirQualityJsonSchemaCreator implements JsonSchemaCreator {
 
     @Autowired
     ApplicationService applicationService;
+
     @Override
     public String create(Schema schema) {
         AirQuality airQualityItem = (AirQuality) schema;
@@ -41,10 +42,10 @@ public class AirQualityJsonSchemaCreator implements JsonSchemaCreator {
 
         Location location = LocationToCoordinates.locationNamesToCoordinates.get(airQualityItem.getStationCode());
 
-        if (location != null){
+        if (location != null) {
             firstLevelChild.put("lat", LocationToCoordinates.locationNamesToCoordinates.get(airQualityItem.getStationCode()).getLat());
             firstLevelChild.put("lon", LocationToCoordinates.locationNamesToCoordinates.get(airQualityItem.getStationCode()).getLon());
-        }else {
+        } else {
             log.error(airQualityItem.getStationCode() + " coordinates for the location not found. Consider adding to the dictionary.");
         }
 
@@ -55,10 +56,35 @@ public class AirQualityJsonSchemaCreator implements JsonSchemaCreator {
 
         firstLevelChild = nodeFactory.objectNode();
 
+        //add as PM10 pollutant if the observation is PM10
         ObjectNode secondLevelChild = nodeFactory.objectNode();
-        secondLevelChild.put("sensor", "Particles PM10");
-        secondLevelChild.put("observation_value", applicationService.parseToFloat(airQualityItem.getMeasurement()));
-        firstLevelChild.set("PM10", secondLevelChild);
+        if (airQualityItem.getPollutant().contains("PM10")) {
+
+            secondLevelChild.put("sensor", "Particles PM10");
+            secondLevelChild.put("observation_value", applicationService.parseToFloat(airQualityItem.getMeasurement()));
+            firstLevelChild.set("PM10DailyAverage", secondLevelChild);
+
+        } else if (airQualityItem.getPollutant().contains("SO2")) {
+            secondLevelChild.put("sensor", "Sulfur dioxide");
+            secondLevelChild.put("observation_value", applicationService.parseToFloat(airQualityItem.getMeasurement()));
+            firstLevelChild.set("SO2DailyAverage", secondLevelChild);
+
+        }else if (airQualityItem.getPollutant().contains("O3")) {
+            secondLevelChild.put("sensor", "Ozone");
+            secondLevelChild.put("observation_value", applicationService.parseToFloat(airQualityItem.getMeasurement()));
+            firstLevelChild.set("O3Max8hAverage", secondLevelChild);
+
+        }else if (airQualityItem.getPollutant().contains("NO2")) {
+            secondLevelChild.put("sensor", "Nitrogen dioxide");
+            secondLevelChild.put("observation_value", applicationService.parseToFloat(airQualityItem.getMeasurement()));
+            firstLevelChild.set("NO2Max1hAverage", secondLevelChild);
+
+        }else if (airQualityItem.getPollutant().contains("CO")) {
+            secondLevelChild.put("sensor", "Carbon monoxide");
+            secondLevelChild.put("observation_value", applicationService.parseToFloat(airQualityItem.getMeasurement()));
+            firstLevelChild.set("COMax8hAverage", secondLevelChild);
+        }
+
 
         mainObject.set("sensors", firstLevelChild);
         firstLevelChild = nodeFactory.objectNode();
