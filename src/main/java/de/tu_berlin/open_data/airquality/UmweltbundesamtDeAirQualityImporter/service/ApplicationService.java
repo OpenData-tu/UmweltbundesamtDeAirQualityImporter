@@ -11,10 +11,10 @@ import java.net.URL;
  */
 public interface ApplicationService {
     String [] getFields(Class<? extends Object> weatherDataClass);
-    Double parseToFloat(String number);
+    Double parseToDouble(String number);
     String toISODateFormat(String date);
 
-    LineMapper createLineMapper(Class<? extends Schema> aClass, Schema userModelInstance);
+    LineMapper createLineMapper(Class<? extends Schema> aClass) throws IllegalAccessException, InstantiationException;
 
     URL generateUrl(String forPollutant, String scope, String startDate, String endDate) throws MalformedURLException;
 }

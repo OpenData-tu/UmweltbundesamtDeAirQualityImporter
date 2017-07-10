@@ -61,27 +61,27 @@ public class AirQualityJsonSchemaCreator implements JsonSchemaCreator {
         if (airQualityItem.getPollutant().contains("PM10")) {
 
             secondLevelChild.put("sensor", "Particles PM10");
-            secondLevelChild.put("observation_value", applicationService.parseToFloat(airQualityItem.getMeasurement()));
+            secondLevelChild.put("observation_value", applicationService.parseToDouble(airQualityItem.getMeasurement()));
             firstLevelChild.set("PM10DailyAverage", secondLevelChild);
 
         } else if (airQualityItem.getPollutant().contains("SO2")) {
             secondLevelChild.put("sensor", "Sulfur dioxide");
-            secondLevelChild.put("observation_value", applicationService.parseToFloat(airQualityItem.getMeasurement()));
+            secondLevelChild.put("observation_value", applicationService.parseToDouble(airQualityItem.getMeasurement()));
             firstLevelChild.set("SO2DailyAverage", secondLevelChild);
 
         }else if (airQualityItem.getPollutant().contains("O3")) {
             secondLevelChild.put("sensor", "Ozone");
-            secondLevelChild.put("observation_value", applicationService.parseToFloat(airQualityItem.getMeasurement()));
+            secondLevelChild.put("observation_value", applicationService.parseToDouble(airQualityItem.getMeasurement()));
             firstLevelChild.set("O3Max8hAverage", secondLevelChild);
 
         }else if (airQualityItem.getPollutant().contains("NO2")) {
             secondLevelChild.put("sensor", "Nitrogen dioxide");
-            secondLevelChild.put("observation_value", applicationService.parseToFloat(airQualityItem.getMeasurement()));
+            secondLevelChild.put("observation_value", applicationService.parseToDouble(airQualityItem.getMeasurement()));
             firstLevelChild.set("NO2Max1hAverage", secondLevelChild);
 
         }else if (airQualityItem.getPollutant().contains("CO")) {
             secondLevelChild.put("sensor", "Carbon monoxide");
-            secondLevelChild.put("observation_value", applicationService.parseToFloat(airQualityItem.getMeasurement()));
+            secondLevelChild.put("observation_value", applicationService.parseToDouble(airQualityItem.getMeasurement()));
             firstLevelChild.set("COMax8hAverage", secondLevelChild);
         }
 
