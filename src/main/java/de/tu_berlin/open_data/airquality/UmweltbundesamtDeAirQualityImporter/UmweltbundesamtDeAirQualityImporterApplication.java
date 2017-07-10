@@ -11,6 +11,9 @@ import org.springframework.cloud.task.configuration.EnableTask;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +30,7 @@ public class UmweltbundesamtDeAirQualityImporterApplication {
 //    static Map<String, Station> myMapp = new HashMap();
 
     public static void main(String[] args) throws IOException, ParseException {
+
 //        JSONParser jsonParser = new JSONParser();
 //        JSONArray jsonArray = (JSONArray) jsonParser.parse(new FileReader("data.json"));
 //        //Map<String, Object> objectMap = jsonJsonParser.parseMap(jsonJsonParser);

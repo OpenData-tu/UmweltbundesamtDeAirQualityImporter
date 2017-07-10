@@ -1,7 +1,6 @@
 package de.tu_berlin.open_data.airquality.UmweltbundesamtDeAirQualityImporter.batch;
 
 
-import de.tu_berlin.open_data.airquality.UmweltbundesamtDeAirQualityImporter.http.HttpService;
 import de.tu_berlin.open_data.airquality.UmweltbundesamtDeAirQualityImporter.model.AirQuality;
 import de.tu_berlin.open_data.airquality.UmweltbundesamtDeAirQualityImporter.model.Schema;
 import de.tu_berlin.open_data.airquality.UmweltbundesamtDeAirQualityImporter.service.ApplicationService;
@@ -19,11 +18,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.UrlResource;
 
 import javax.sql.DataSource;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 
 /**
@@ -50,17 +50,14 @@ public class BatchConfiguration {
     @Qualifier("dataSource")
     public DataSource dataSource;
 
-    @Autowired
-    private HttpService httpFileDownloaderService;
-
     @Bean
-    public FlatFileItemReader readerBME() throws MalformedURLException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
-      //  MultiResourceItemReader multiResourceItemReader = new MultiResourceItemReader();
-        String sensorType = "bme";
-      //  multiResourceItemReader.setResources(httpFileDownloaderService.getUrlResources(resourceUrl, sensorType));
+    public FlatFileItemReader reader() throws MalformedURLException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
 
         FlatFileItemReader reader = new FlatFileItemReader<>();
-        reader.setResource(new ClassPathResource("data.csv"));
+
+       URL theUrl = applicationService.generateUrl("PM10", "2017-07-09", "2017-07-10");
+
+        reader.setResource(new UrlResource(theUrl));
 
         reader.setLinesToSkip(1);
 
@@ -85,8 +82,8 @@ public class BatchConfiguration {
 
 
     @Bean
-    public Job weatherDataJob(JobCompletionNotificationListener listener) throws NoSuchMethodException, IllegalAccessException, InstantiationException, ClassNotFoundException, InvocationTargetException, MalformedURLException {
-        return jobBuilderFactory.get("weatherDataJob")
+    public Job umweltAirQualityJob(JobCompletionNotificationListener listener) throws NoSuchMethodException, IllegalAccessException, InstantiationException, ClassNotFoundException, InvocationTargetException, MalformedURLException {
+        return jobBuilderFactory.get("umweltAirQualityJob")
                 .incrementer(new RunIdIncrementer())
                 .listener(listener)
                 .flow(step1())
@@ -98,7 +95,7 @@ public class BatchConfiguration {
     public Step step1() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, MalformedURLException, ClassNotFoundException {
         return stepBuilderFactory.get("step1")
                 .<AirQuality, AirQuality>chunk(10)
-                .reader(readerBME())
+                .reader(reader())
                 .processor(processor())
                 .writer(writer())
                 .build();

@@ -3,10 +3,13 @@ package de.tu_berlin.open_data.airquality.UmweltbundesamtDeAirQualityImporter.se
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import de.tu_berlin.open_data.airquality.UmweltbundesamtDeAirQualityImporter.batch.AirQualityItemProcessor;
 import de.tu_berlin.open_data.airquality.UmweltbundesamtDeAirQualityImporter.model.AirQuality;
 import de.tu_berlin.open_data.airquality.UmweltbundesamtDeAirQualityImporter.model.Location;
 import de.tu_berlin.open_data.airquality.UmweltbundesamtDeAirQualityImporter.model.Schema;
 import de.tu_berlin.open_data.airquality.UmweltbundesamtDeAirQualityImporter.util.LocationToCoordinates;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AirQualityJsonSchemaCreator implements JsonSchemaCreator {
+
+    private static final Logger log = LoggerFactory.getLogger(AirQualityItemProcessor.class);
+
 
     @Autowired
     ApplicationService applicationService;
@@ -39,7 +45,7 @@ public class AirQualityJsonSchemaCreator implements JsonSchemaCreator {
             firstLevelChild.put("lat", LocationToCoordinates.locationNamesToCoordinates.get(airQualityItem.getStationCode()).getLat());
             firstLevelChild.put("lon", LocationToCoordinates.locationNamesToCoordinates.get(airQualityItem.getStationCode()).getLon());
         }else {
-            System.out.println(airQualityItem.getStationCode());
+            log.error(airQualityItem.getStationCode() + " coordinates for the location not found. Consider adding to the dictionary.");
         }
 
 
