@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.StringTokenizer;
 
 /**
  * Created by ahmadjawid on 6/10/17.
@@ -48,7 +49,17 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public String toISODateFormat(String date) {
-        return date + "Z";
+        StringTokenizer stringTokenizer = new StringTokenizer(date, ".");
+        try {
+            String day = stringTokenizer.nextToken();
+            String month = stringTokenizer.nextToken();
+            String year = stringTokenizer.nextToken();
+            return year + "-" + month + "-" + day + "T22:00:00Z";
+
+        } catch (NullPointerException e) {
+            return LocalDateTime.now().minusDays(1).toString() + "Z";
+        }
+
     }
 
     @Override
@@ -72,8 +83,8 @@ public class ApplicationServiceImpl implements ApplicationService {
         LocalDateTime fromDateTime = LocalDateTime.of(fromDate, time);
         LocalDateTime toDateTime = LocalDateTime.of(toDate, time);
 
-        URL url = new URL("https://www.umweltbundesamt.de/uaq/csv/stations/data?pollutant[]=" +forPollutant + "&scope[]=" +scope + "&group" +
-                "[]=station&range[]="+fromDateTime.toEpochSecond(ZoneOffset.UTC) + "," + toDateTime.toEpochSecond(ZoneOffset.UTC));
+        URL url = new URL("https://www.umweltbundesamt.de/uaq/csv/stations/data?pollutant[]=" + forPollutant + "&scope[]=" + scope + "&group" +
+                "[]=station&range[]=" + fromDateTime.toEpochSecond(ZoneOffset.UTC) + "," + toDateTime.toEpochSecond(ZoneOffset.UTC));
 
         return url;
     }
