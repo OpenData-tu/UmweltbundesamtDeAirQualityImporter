@@ -7,8 +7,14 @@ import java.util.StringTokenizer;
 
 /**
  * Created by ahmadjawid on 7/6/17.
+ *All necessary fields for parsing data from source is defined here.
+ * Final fields are not used when parsing from file
  */
 public class AirQuality extends Schema {
+
+    /**
+     * The order of declaring fields should be the same as in csv file to parse correctly
+     */
 
     private String stationCode;
     private String stationName;
@@ -18,8 +24,14 @@ public class AirQuality extends Schema {
     private String timestamp;
     private String measurement;
 
-
+    /**
+     * Declared as final to skip the field when parsing csv file
+     */
     private final String sourceId = "umweltbundesamt_de";
+
+    /**
+     * Declared as final to skip the field when parsing csv file
+     */
     private final String license = "find out";
 
 

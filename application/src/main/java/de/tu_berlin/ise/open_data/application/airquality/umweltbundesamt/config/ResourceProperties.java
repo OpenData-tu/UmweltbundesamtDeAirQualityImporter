@@ -37,9 +37,15 @@ public class ResourceProperties {
     public void setUrl(String url) {
         this.url = url;
     }
-
+    /**
+     * Generate the url for previous day.
+     * @param forPollutant
+     * @param scope
+     * @return String
+     * */
     public String getPreviousDayUrl(String forPollutant, String scope) {
 
+        //If not time is provided set to 22:00:00 (this is the default time in our importers when no time is provided
         LocalTime time = LocalTime.of(22, 00, 00);
         LocalDate fromDate = LocalDate.parse(startDate, DateTimeFormatter.ISO_DATE).minusDays(1);
         LocalDate toDate = LocalDate.parse(endDate, DateTimeFormatter.ISO_DATE).minusDays(1);

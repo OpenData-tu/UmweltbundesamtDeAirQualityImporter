@@ -6,6 +6,7 @@ import de.tu_berlin.ise.open_data.application.airquality.umweltbundesamt.model.E
 import de.tu_berlin.ise.open_data.application.airquality.umweltbundesamt.model.Location;
 import de.tu_berlin.ise.open_data.application.airquality.umweltbundesamt.util.LocationToCoordinates;
 import de.tu_berlin.ise.open_data.library.model.Schema;
+import de.tu_berlin.ise.open_data.library.service.JsonSchemaCreator;
 import de.tu_berlin.ise.open_data.library.service.JsonStringBuilder;
 import org.json.JSONException;
 import org.slf4j.Logger;
@@ -14,12 +15,20 @@ import org.springframework.stereotype.Service;
 
 /**
  * Created by ahmadjawid on 7/6/17.
+ * Implementation of {@link JsonSchemaCreator}
  */
 @Service
 public class AirQualityJsonSchemaCreator implements JsonSchemaCreator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AirQualityItemProcessor.class);
 
+
+    /**
+     * Get an objects which is extended from {@link Schema} class
+     * and converts it to json
+     * @param schema
+     * @return String
+     * */
     @Override
     public String create(Schema schema) throws JSONException {
         AirQuality item = (AirQuality) schema;

@@ -10,6 +10,7 @@ import java.net.URL;
 
 /**
  * Created by ahmadjawid on 7/19/17.
+ * Reader which specifies how to read data from the source
  */
 
 public class CustomFlatFileItemReader extends FlatFileItemReader {
@@ -19,9 +20,10 @@ public class CustomFlatFileItemReader extends FlatFileItemReader {
                        Class<? extends Schema> lineMapperClass) throws InstantiationException, IllegalAccessException, MalformedURLException {
 
         setResource(new UrlResource(new URL(resourceUrl)));
-
+        //skip the header
         setLinesToSkip(1);
 
+        //Set LineMapper which defines how source rows are parsed into Java Objects
         setLineMapper(applicationService.createLineMapper(lineMapperClass));
 
     }
