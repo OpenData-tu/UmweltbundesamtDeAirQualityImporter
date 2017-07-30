@@ -43,7 +43,6 @@ $ docker pull ahmadjawidjami/umwelt_airquality_importer
 ```sh
 $  docker run \
 --env "KAFKA_BOOTSTRAP_SERVERS=localhost:9092" \
---env "KAFKA_BROKER_LIST=localhost:9092" \
 --env "KAFKA_TOPIC=airQualityGermany" \
 ahmadjawidjami/umwelt_airquality_importer
 ```
