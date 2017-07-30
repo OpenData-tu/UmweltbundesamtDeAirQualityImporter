@@ -1,4 +1,4 @@
-package de.tu_berlin.ise.open_data.airquality.umweltbundesamt;
+package de.tu_berlin.ise.open_data.application.airquality.umweltbundesamt;
 
 import de.tu_berlin.ise.open_data.library.config.ServiceConfiguration;
 import org.json.simple.parser.ParseException;

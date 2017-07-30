@@ -1,4 +1,4 @@
-package de.tu_berlin.ise.open_data.airquality.umweltbundesamt.model;
+package de.tu_berlin.ise.open_data.application.airquality.umweltbundesamt.model;
 
 /**
  * Created by rohullahayobi on 6/28/17.

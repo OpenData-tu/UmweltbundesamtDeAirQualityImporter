@@ -1,4 +1,9 @@
-package de.tu_berlin.ise.open_data.airquality.umweltbundesamt.model;
+package de.tu_berlin.ise.open_data.application.airquality.umweltbundesamt.model;
+
+import de.tu_berlin.ise.open_data.library.model.Schema;
+
+import java.time.LocalDateTime;
+import java.util.StringTokenizer;
 
 /**
  * Created by ahmadjawid on 7/6/17.
@@ -12,6 +17,10 @@ public class AirQuality extends Schema {
     private String dataType;
     private String timestamp;
     private String measurement;
+
+
+    private final String sourceId = "umweltbundesamt_de";
+    private final String license = "find out";
 
 
     public String getStationCode() {
@@ -55,7 +64,7 @@ public class AirQuality extends Schema {
     }
 
     public String getTimestamp() {
-        return timestamp;
+        return toISOTimestamp(timestamp);
     }
 
     public void setTimestamp(String timestamp) {
@@ -69,6 +78,31 @@ public class AirQuality extends Schema {
     public void setMeasurement(String measurement) {
         this.measurement = measurement;
     }
+
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public String getLicense() {
+        return license;
+    }
+
+    private String toISOTimestamp(String timestamp) {
+        StringTokenizer stringTokenizer = new StringTokenizer(timestamp, ".");
+        try {
+            String day = stringTokenizer.nextToken();
+            String month = stringTokenizer.nextToken();
+            String year = stringTokenizer.nextToken();
+            return year + "-" + month + "-" + day + "T22:00:00Z";
+
+        } catch (NullPointerException e) {
+            return LocalDateTime.now().minusDays(1).toString() + "Z";
+        }
+
+    }
+
+
+
 
     @Override
     public String getDelimiter() {

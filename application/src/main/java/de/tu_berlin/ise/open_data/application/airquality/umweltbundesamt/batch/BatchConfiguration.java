@@ -1,16 +1,19 @@
-package de.tu_berlin.ise.open_data.airquality.umweltbundesamt.batch;
+package de.tu_berlin.ise.open_data.application.airquality.umweltbundesamt.batch;
 
 
-import de.tu_berlin.ise.open_data.airquality.umweltbundesamt.model.AirQuality;
-import de.tu_berlin.ise.open_data.airquality.umweltbundesamt.service.ApplicationService;
+import de.tu_berlin.ise.open_data.application.airquality.umweltbundesamt.config.ResourceProperties;
+import de.tu_berlin.ise.open_data.application.airquality.umweltbundesamt.model.AirQuality;
+import de.tu_berlin.ise.open_data.library.batch.JobCompletionNotificationListener;
+import de.tu_berlin.ise.open_data.library.batch.JsonItemWriter;
+import de.tu_berlin.ise.open_data.library.batch.StepProcessListener;
+import de.tu_berlin.ise.open_data.library.service.ApplicationService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.JobRegistry;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,7 +25,6 @@ import javax.sql.DataSource;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.LocalDate;
 
 
 /**
@@ -42,8 +44,9 @@ public class BatchConfiguration {
     @Autowired
     public ApplicationService applicationService;
 
-   private String startDate = LocalDate.now().minusDays(1).toString();
-   private String endDate = LocalDate.now().toString();
+    @Autowired
+    private ResourceProperties resourceProperties;
+
 
     @Autowired
     @Qualifier("dataSource")
@@ -54,89 +57,64 @@ public class BatchConfiguration {
     @Bean
     public FlatFileItemReader readerPM10() throws MalformedURLException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
 
-        FlatFileItemReader reader = new FlatFileItemReader<>();
+        CustomFlatFileItemReader flatFileItemReader = new CustomFlatFileItemReader();
 
-       URL theUrl = applicationService.generateUrl("PM10", "1TMW", startDate, endDate);
+        String url = resourceProperties.getPreviousDayUrl("PM10", "1TMW");
 
-        reader.setResource(new UrlResource(theUrl));
+        flatFileItemReader.setProperties(applicationService, url, AirQuality.class);
 
-        reader.setLinesToSkip(1);
-
-        reader.setLineMapper(applicationService.createLineMapper(AirQuality.class));
-
-        return reader;
+        return flatFileItemReader;
     }
 
     @Bean
     public FlatFileItemReader readerSO2() throws MalformedURLException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
 
-        FlatFileItemReader reader = new FlatFileItemReader<>();
-        String startDate = LocalDate.now().minusDays(1).toString();
-        String endDate = LocalDate.now().toString();
+        CustomFlatFileItemReader flatFileItemReader = new CustomFlatFileItemReader();
+        String url = resourceProperties.getPreviousDayUrl("SO2", "1TMW");
 
-        URL theUrl = applicationService.generateUrl("SO2", "1TMW", startDate, endDate);
+        flatFileItemReader.setProperties(applicationService, url, AirQuality.class);
 
-        reader.setResource(new UrlResource(theUrl));
+        return flatFileItemReader;
 
-        reader.setLinesToSkip(1);
 
-        reader.setLineMapper(applicationService.createLineMapper(AirQuality.class));
-
-        return reader;
     }
 
     @Bean
     public FlatFileItemReader readerO3() throws MalformedURLException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
 
-        FlatFileItemReader reader = new FlatFileItemReader<>();
-        String startDate = LocalDate.now().minusDays(1).toString();
-        String endDate = LocalDate.now().toString();
+        CustomFlatFileItemReader flatFileItemReader = new CustomFlatFileItemReader();
+        String url = resourceProperties.getPreviousDayUrl("O3", "8SMW_MAX");
 
-        URL theUrl = applicationService.generateUrl("O3", "8SMW_MAX", startDate, endDate);
+        flatFileItemReader.setProperties(applicationService, url, AirQuality.class);
 
-        reader.setResource(new UrlResource(theUrl));
+        return flatFileItemReader;
 
-        reader.setLinesToSkip(1);
 
-        reader.setLineMapper(applicationService.createLineMapper(AirQuality.class));
-
-        return reader;
     }
 
     @Bean
     public FlatFileItemReader readerNO2() throws MalformedURLException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
 
-        FlatFileItemReader reader = new FlatFileItemReader<>();
-        String startDate = LocalDate.now().minusDays(1).toString();
-        String endDate = LocalDate.now().toString();
 
-        URL theUrl = applicationService.generateUrl("NO2", "1SMW_MAX", startDate, endDate);
+        CustomFlatFileItemReader flatFileItemReader = new CustomFlatFileItemReader();
+        String url = resourceProperties.getPreviousDayUrl("NO2", "1SMW_MAX");
 
-        reader.setResource(new UrlResource(theUrl));
+        flatFileItemReader.setProperties(applicationService, url, AirQuality.class);
 
-        reader.setLinesToSkip(1);
-
-        reader.setLineMapper(applicationService.createLineMapper(AirQuality.class));
-
-        return reader;
+        return flatFileItemReader;
     }
 
     @Bean
     public FlatFileItemReader readerCO() throws MalformedURLException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
 
-        FlatFileItemReader reader = new FlatFileItemReader<>();
-        String startDate = LocalDate.now().minusDays(1).toString();
-        String endDate = LocalDate.now().toString();
+        CustomFlatFileItemReader flatFileItemReader = new CustomFlatFileItemReader();
+        String url = resourceProperties.getPreviousDayUrl("CO", "8SMW_MAX");
 
-        URL theUrl = applicationService.generateUrl("CO", "8SMW_MAX", startDate, endDate);
+        flatFileItemReader.setProperties(applicationService, url, AirQuality.class);
 
-        reader.setResource(new UrlResource(theUrl));
+        return flatFileItemReader;
 
-        reader.setLinesToSkip(1);
 
-        reader.setLineMapper(applicationService.createLineMapper(AirQuality.class));
-
-        return reader;
     }
 
     @Bean
@@ -145,8 +123,13 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public AirQualityJsonItemWriter writer() {
-        return new AirQualityJsonItemWriter();
+    public ItemWriter<String> writer() {
+        return new JsonItemWriter();
+    }
+
+    @Bean
+    public StepProcessListener stepExecutionListener() {
+        return new StepProcessListener();
     }
 
 
@@ -163,8 +146,8 @@ public class BatchConfiguration {
 
     @Bean
     public Step step1() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, MalformedURLException, ClassNotFoundException {
-        return stepBuilderFactory.get("step1")
-                .<AirQuality, AirQuality>chunk(10)
+        return stepBuilderFactory.get("step1").listener(stepExecutionListener())
+                .<AirQuality, String>chunk(100)
                 .reader(readerPM10())
                 .processor(processor())
                 .writer(writer())
@@ -173,8 +156,8 @@ public class BatchConfiguration {
 
     @Bean
     public Step step2() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, MalformedURLException, ClassNotFoundException {
-        return stepBuilderFactory.get("step2")
-                .<AirQuality, AirQuality>chunk(10)
+        return stepBuilderFactory.get("step2").listener(stepExecutionListener())
+                .<AirQuality, String>chunk(100)
                 .reader(readerSO2())
                 .processor(processor())
                 .writer(writer())
@@ -183,8 +166,8 @@ public class BatchConfiguration {
 
     @Bean
     public Step step3() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, MalformedURLException, ClassNotFoundException {
-        return stepBuilderFactory.get("step3")
-                .<AirQuality, AirQuality>chunk(10)
+        return stepBuilderFactory.get("step3").listener(stepExecutionListener())
+                .<AirQuality, String>chunk(100)
                 .reader(readerO3())
                 .processor(processor())
                 .writer(writer())
@@ -193,8 +176,8 @@ public class BatchConfiguration {
 
     @Bean
     public Step step4() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, MalformedURLException, ClassNotFoundException {
-        return stepBuilderFactory.get("step4")
-                .<AirQuality, AirQuality>chunk(10)
+        return stepBuilderFactory.get("step4").listener(stepExecutionListener())
+                .<AirQuality, String>chunk(100)
                 .reader(readerNO2())
                 .processor(processor())
                 .writer(writer())
@@ -203,8 +186,8 @@ public class BatchConfiguration {
 
     @Bean
     public Step step5() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, MalformedURLException, ClassNotFoundException {
-        return stepBuilderFactory.get("step5")
-                .<AirQuality, AirQuality>chunk(10)
+        return stepBuilderFactory.get("step5").listener(stepExecutionListener())
+                .<AirQuality, String>chunk(100)
                 .reader(readerCO())
                 .processor(processor())
                 .writer(writer())

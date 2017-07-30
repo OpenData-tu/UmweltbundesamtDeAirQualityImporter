@@ -28,7 +28,6 @@ public class KafkaRecordProducerImpl implements KafkaRecordProducer {
     @Override
     public void produce(String jsonObject) throws ExecutionException, InterruptedException {
 
-        System.out.println(jsonObject);
 
         producer.send(new ProducerRecord(topic, jsonObject)).get();
 

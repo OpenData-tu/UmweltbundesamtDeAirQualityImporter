@@ -1,7 +1,7 @@
-package de.tu_berlin.ise.open_data.airquality.umweltbundesamt.util;
+package de.tu_berlin.ise.open_data.application.airquality.umweltbundesamt.util;
 
 
-import de.tu_berlin.ise.open_data.airquality.umweltbundesamt.model.Location;
+import de.tu_berlin.ise.open_data.application.airquality.umweltbundesamt.model.Location;
 
 import java.util.Collections;
 import java.util.HashMap;
